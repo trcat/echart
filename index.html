@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Echart Custom Demo</title>
+  <script type="text/javascript" src="./echarts.min.js"></script>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #target {
+      width: 500px;
+      height: 500px;
+    }
+  </style>
+</head>
+<body>
+  <div id="target"></div>
+  <script type="text/javascript">
+    function renderItem(params, api) {
+      const coord = api.coord([api.value(0), api.value(1)]);
+      const size = api.size([0, api.value(1)]);
+      const { x, y, width, height } = params.coordSys;
+      const rectShap = echarts.graphic.clipRectByRect({
+        x: coord[0] - size[0] * 0.325,
+        y: coord[1],
+        width: size[0] * 0.65,
+        height: size[1]
+      }, { x, y, width, height });
+      return rectShap && {
+        type: 'rect',
+        transition: ['shape'],
+        shape: rectShap,
+        style: api.style()
+      }
+    } 
+    const option = {
+      title: {
+        text: 'Echart Custom Demo',
+        left: 'center'
+      },
+      xAxis: {
+        type: 'category',
+        data: ['类目1', '类目2', '类目3', '类目4']
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          type: 'custom',
+          data: [
+            {
+              name: '类目1',
+              value: [0, 5]
+            },
+            {
+              name: '类目2',
+              value: [1, 10]
+            },
+            {
+              name: '类目3',
+              value: [2, 15]
+            },
+            {
+              name: '类目4',
+              value: [3, 20]
+            }
+          ],
+          renderItem,
+        }
+      ]
+    }
+    echarts.init(document.getElementById('target')).setOption(option, true);
+  </script>
+</body>
+</html>
